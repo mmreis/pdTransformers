@@ -9,11 +9,20 @@ class AddDateTimeFeatures(BaseEstimator, TransformerMixin):
 
     Parameters
     ----------
-    feat: a list of columns
-    index: default=True, the index will be used for extraction of the date or time features
-    a column containing dates or time could be provided instead
+    :param feat: a dictionary with the date and/or time features to be extracted with key as the desired column name.
+    Visit http://strftime.org/ for Python's strftime directives which can used here.
+    :param index: bool or str (default=True)
+    if default=True The index will be used for extraction of the date and/or time features
+    else a column name containing datetime should be specified
+
+    Example:
+            dataset = generate_ts(n_samples=1000, n_features=1, n_targets=1,
+                                    split_X_y=False, start_date='2016-01-03 00:00',
+                                    freq='1H')
+            c = AddDateTimeFeatures({'hour': '%H'})
 
     """
+
     def __init__(self, feat, index=True):
         self.feat = feat
         self._index = index
@@ -46,3 +55,6 @@ class AddDateTimeFeatures(BaseEstimator, TransformerMixin):
             return X
         else:
             raise ValueError('feat parameter should be a dictionary!')
+
+    def inverse_transform(self, X, y=None):
+        return X
